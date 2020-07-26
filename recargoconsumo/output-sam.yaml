@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS Serverless Spring Boot API - com.zugatti::recargoconsumo
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+Resources:
+  RecargoconsumoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.zugatti.StreamLambdaHandler::handleRequest
+      Runtime: java8
+      CodeUri: s3://mybucketrecargoconsumo/6d3a8999f87777c0047d1344b3e2e237
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 30
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+Outputs:
+  RecargoconsumoApi:
+    Description: URL for application
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/ping
+    Export:
+      Name: RecargoconsumoApi
